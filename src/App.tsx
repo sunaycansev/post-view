@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import routes from "@/routes/routes";
 import AuthWrapper from "@/components/AuthWrapper";
+import PrefetchWrapper from "@/components/PrefetchWrapper";
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
                 isPrivate={route.isPrivate}
                 permissions={route.permissions}
               >
-                <route.renderer />
+                <PrefetchWrapper translationKeys={route.translations}>
+                  <route.renderer />
+                </PrefetchWrapper>
               </AuthWrapper>
             }
           />
