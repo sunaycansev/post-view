@@ -1,0 +1,6 @@
+export enum Permission {
+  VIEW_POSTS = "VIEW_POSTS",
+  VIEW_COMMENTS = "VIEW_COMMENTS",
+  EDIT_POST = "EDIT_POST",
+  CREATE_POST = "CREATE_POST",
+}
