@@ -3,6 +3,7 @@ import { usePosts } from "@/hooks/usePosts";
 import { useAuth } from "@/hooks/useAuth";
 import { Permission } from "@/constants";
 import { Post } from "@/types/post";
+import { Link } from "react-router-dom";
 
 export const Posts = () => {
   const { user } = useAuth();
@@ -48,22 +49,20 @@ export const Posts = () => {
             <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
             <p className="text-gray-700 mb-4">{post.content}</p>
             <div className="flex gap-2">
-              <button
-                onClick={() => navigator.go("singlePost", { id: post.id })}
+              <Link
+                to={navigator.get("singlePost", { id: post.id }) || ""}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:cursor-pointer"
-                aria-label={`View post: ${post.title}`}
               >
                 View Post
-              </button>
+              </Link>
 
               {hasEditPermission && (
-                <button
-                  onClick={() => navigator.go("editPost", { id: post.id })}
+                <Link
+                  to={navigator.get("editPost", { id: post.id }) || ""}
                   className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 hover:cursor-pointer"
-                  aria-label={`Edit post: ${post.title}`}
                 >
                   Edit
-                </button>
+                </Link>
               )}
             </div>
           </div>

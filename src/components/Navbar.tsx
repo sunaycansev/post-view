@@ -22,10 +22,7 @@ export const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
       <div className="container grid grid-cols-2 items-center h-16 px-4 mx-auto">
         <div className="flex gap-4 sm:gap-8">
-          <Link
-            to="/dashboard"
-            className="text-sm sm:text-base hover:text-gray-600"
-          >
+          <Link to="/" className="text-sm sm:text-base hover:text-gray-600">
             Dashboard
           </Link>
           <Link

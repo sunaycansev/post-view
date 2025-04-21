@@ -7,7 +7,7 @@ type RouteParams = Record<string, string | number>;
 
 export const navigator = {
   get: (routeName: string, params?: RouteParams): string | null => {
-    const route = routes.find((r) => r.name === routeName);
+    const route = routes.find((route) => route.name === routeName);
 
     if (!route) {
       console.error(`Route with name "${routeName}" not found`);
@@ -31,7 +31,10 @@ export const navigator = {
         }, initialPath)
       : initialPath;
 
-    const missingParams = expectedParams.filter((p) => finalPath.includes(p));
+    const missingParams = expectedParams.filter((param) =>
+      finalPath.includes(param)
+    );
+
     if (missingParams.length > 0) {
       console.error(
         `Route "${routeName}" requires parameters (${missingParams.join(

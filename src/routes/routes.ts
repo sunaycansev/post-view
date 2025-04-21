@@ -4,6 +4,9 @@ import { AccessDenied } from "@/pages/AccessDenied";
 import { Permission } from "@/constants";
 import { Login } from "@/pages/Login";
 import { Posts } from "@/pages/Posts";
+import { SinglePostPage } from "@/pages/SinglePostPage";
+import { EditPostTab } from "@/pages/EditPostTab";
+import { PostCommentsTab } from "@/pages/PostCommentsTab";
 
 export interface Route {
   name: string;
@@ -12,6 +15,7 @@ export interface Route {
   isPrivate?: boolean;
   permissions?: Permission[];
   translations?: string[];
+  children?: Route[];
 }
 
 export const routes: Route[] = [
@@ -37,6 +41,30 @@ export const routes: Route[] = [
     isPrivate: true,
     permissions: [Permission.VIEW_POSTS],
     translations: ["posts"],
+  },
+  {
+    name: "singlePost",
+    path: "/posts/:id",
+    renderer: SinglePostPage,
+    isPrivate: true,
+    permissions: [Permission.VIEW_POSTS],
+    translations: ["post"],
+  },
+  {
+    name: "editPost",
+    path: "/posts/:id/edit",
+    renderer: EditPostTab,
+    isPrivate: true,
+    permissions: [Permission.EDIT_POST],
+    translations: ["postEdit"],
+  },
+  {
+    name: "postComments",
+    path: "/posts/:id/comments",
+    renderer: PostCommentsTab,
+    isPrivate: true,
+    permissions: [Permission.VIEW_COMMENTS],
+    translations: ["postComments"],
   },
   {
     name: "accessDenied",
