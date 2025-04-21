@@ -1,4 +1,4 @@
-import { useNavigator } from "@/services/navigator";
+import { useNav } from "@/services/navigator";
 import { usePosts } from "@/hooks/usePosts";
 import { useAuth } from "@/hooks/useAuth";
 import { Permission } from "@/constants";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 export const Posts = () => {
   const { user } = useAuth();
   const { posts, isLoading, isError, error } = usePosts({ userId: user?.id });
-  const navigator = useNavigator();
+  const nav = useNav();
 
   const hasEditPermission = user?.permissions.includes(Permission.EDIT_POST);
 
@@ -50,7 +50,7 @@ export const Posts = () => {
             <p className="text-gray-700 mb-4">{post.content}</p>
             <div className="flex gap-2">
               <Link
-                to={navigator.get("singlePost", { id: post.id }) || ""}
+                to={nav.singlePost.get({ id: post.id })}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:cursor-pointer"
               >
                 View Post
@@ -58,7 +58,7 @@ export const Posts = () => {
 
               {hasEditPermission && (
                 <Link
-                  to={navigator.get("editPost", { id: post.id }) || ""}
+                  to={nav.editPost.get({ id: post.id })}
                   className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 hover:cursor-pointer"
                 >
                   Edit

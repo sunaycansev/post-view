@@ -1,14 +1,13 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useQueryClient } from "@tanstack/react-query";
 import { AUTH_QUERY_KEY, Permission } from "@/constants";
-import { Link, useNavigate } from "react-router-dom";
-import { useNavigator } from "@/services/navigator";
+import { Link } from "react-router-dom";
+import { useNav } from "@/services/navigator";
 
 export const Navbar = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const navigator = useNavigator();
+  const nav = useNav();
   const canCreatePost = user?.permissions.includes(Permission.CREATE_POST);
 
   const handleLogout = () => {
@@ -18,7 +17,7 @@ export const Navbar = () => {
   };
 
   const handleLogin = () => {
-    navigate("/login");
+    nav.login.go();
   };
 
   return (
@@ -26,20 +25,20 @@ export const Navbar = () => {
       <div className="container grid grid-cols-2 items-center h-16 px-4 mx-auto">
         <div className="flex gap-4 sm:gap-8">
           <Link
-            to={navigator.get("dashboard")}
+            to={nav.dashboard.get()}
             className="text-sm sm:text-base hover:text-gray-600"
           >
             Dashboard
           </Link>
           <Link
-            to={navigator.get("posts")}
+            to={nav.posts.get()}
             className="text-sm sm:text-base hover:text-gray-600"
           >
             Posts
           </Link>
           {canCreatePost && (
             <Link
-              to={navigator.get("createPost")}
+              to={nav.createPost.get()}
               className="text-sm sm:text-base hover:text-gray-600"
             >
               Create Post

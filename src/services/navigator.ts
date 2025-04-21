@@ -1,101 +1,97 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+  generatePath,
+  NavigateOptions,
+} from "react-router-dom";
 import { routes } from "@/routes/routes";
 import { useAuth } from "@/hooks/useAuth";
 import { hasRequiredPermission } from "@/utils/permissionUtils";
 
-type RouteParams = Record<string, string | number>;
+type RouteParams = Record<string, string | number | undefined>;
 
-export const navigator = {
-  get: (routeName: string, params?: RouteParams): string => {
-    const route = routes.find((route) => route.name === routeName);
+interface NavMethods {
+  get: (params?: RouteParams) => string;
+  go: (params?: RouteParams, options?: NavigateOptions) => void;
+}
 
-    if (!route) {
-      console.error(`Route with name "${routeName}" not found`);
-      return "";
-    }
-
-    const initialPath = route.path;
-    const expectedParams = initialPath.match(/:([a-zA-Z0-9_]+)/g) || [];
-
-    const finalPath = params
-      ? Object.entries(params).reduce((currentPath, [key, value]) => {
-          const placeholder = `:${key}`;
-          if (currentPath.includes(placeholder)) {
-            return currentPath.replace(placeholder, String(value));
-          } else {
-            console.warn(
-              `Parameter "${key}" provided for route "${routeName}" but not found in path pattern "${initialPath}"`
-            );
-            return currentPath;
-          }
-        }, initialPath)
-      : initialPath;
-
-    const missingParams = expectedParams.filter((param) =>
-      finalPath.includes(param)
-    );
-
-    if (missingParams.length > 0) {
-      console.error(
-        `Route "${routeName}" requires parameters (${missingParams.join(
-          ", "
-        )}) that were not provided or fully replaced. Generated path: ${finalPath}`
-      );
-      return "";
-    }
-
-    return finalPath;
-  },
+export type Nav = {
+  [routeName: string]: NavMethods;
 };
 
-export const useNavigator = () => {
+const LOGIN_ROUTE_NAME = "login";
+const ACCESS_DENIED_ROUTE_NAME = "accessDenied";
+
+export const useNav = (): Nav => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
 
-  return {
-    get: navigator.get,
-
-    go: (routeName: string, params?: RouteParams): boolean => {
-      const route = routes.find((r) => r.name === routeName);
-
-      if (!route) {
+  const nav = routes.reduce<Nav>((acc, route) => {
+    const generateRoutePath = (params?: RouteParams): string => {
+      try {
+        const definedParams = params
+          ? Object.entries(params).reduce<Record<string, string>>(
+              (paramsAccumulator, [key, value]) => {
+                if (value !== undefined) {
+                  paramsAccumulator[key] = String(value);
+                }
+                return paramsAccumulator;
+              },
+              {}
+            )
+          : {};
+        return generatePath(route.path, definedParams);
+      } catch (error) {
         console.error(
-          `Attempted to navigate to non-existent route: "${routeName}", "params": ${JSON.stringify(
-            params
-          )}`
+          `Error generating path for route "${route.name}" with params:`,
+          params,
+          error
         );
-        return false;
+
+        return "/";
       }
+    };
 
-      if (route.isPrivate && !user) {
-        console.log(
-          `Redirecting to login. Route "${routeName}" requires authentication.`
-        );
-        navigate("/login", { state: { from: location } });
-        return false;
-      }
+    acc[route.name] = {
+      get: (params?: RouteParams): string => {
+        return generateRoutePath(params);
+      },
 
-      if (!hasRequiredPermission(user?.permissions, route.permissions)) {
-        console.log(
-          `Redirecting to access denied. User lacks permissions for route "${routeName}".`
-        );
-        navigate("/access-denied");
-        return false;
-      }
+      go: (params?: RouteParams, options?: NavigateOptions): void => {
+        if (route.isPrivate && !user) {
+          const loginPath =
+            routes.find((route) => route.name === LOGIN_ROUTE_NAME)?.path ||
+            "/login";
 
-      const url = navigator.get(routeName, params);
+          navigate(loginPath, {
+            state: { from: location },
+            replace: true,
+          });
 
-      if (url === null) {
-        console.error(
-          `Navigation failed: Could not generate valid URL for route "${routeName}" with params:`,
-          params
-        );
-        return false;
-      }
+          return;
+        }
 
-      navigate(url);
-      return true;
-    },
-  };
+        if (user && route.permissions && route.permissions.length > 0) {
+          if (!hasRequiredPermission(user.permissions, route.permissions)) {
+            const accessDeniedPath =
+              routes.find((r) => r.name === ACCESS_DENIED_ROUTE_NAME)?.path ||
+              "/access-denied";
+
+            navigate(accessDeniedPath, {
+              replace: true,
+            });
+            return;
+          }
+        }
+
+        const url = generateRoutePath(params);
+        navigate(url, options);
+      },
+    };
+
+    return acc;
+  }, {});
+
+  return nav;
 };

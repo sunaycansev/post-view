@@ -3,7 +3,7 @@ import { useRecentComments } from "@/hooks/useRecentComments";
 import { Post } from "@/types/post";
 import { Comment } from "@/types/comment";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigator } from "@/services/navigator";
+import { useNav } from "@/services/navigator";
 
 const LoadingIndicator = () => (
   <p className="text-gray-500 italic">Loading...</p>
@@ -15,7 +15,7 @@ const ErrorMessage = ({ message }: { message?: string }) => (
 
 export const Dashboard = () => {
   const { user } = useAuth();
-  const navigator = useNavigator();
+  const nav = useNav();
 
   const {
     posts,
@@ -54,9 +54,7 @@ export const Dashboard = () => {
                       className="text-sm text-gray-600 border-b border-gray-100 last:border-b-0 py-1"
                     >
                       <button
-                        onClick={() =>
-                          navigator.go("singlePost", { id: post.id })
-                        }
+                        onClick={() => nav.singlePost.go({ id: post.id })}
                         className="w-full text-left truncate px-1 py-0.5 rounded text-blue-600 hover:bg-blue-50 hover:text-blue-800 hover:cursor-pointer"
                       >
                         {post.title}

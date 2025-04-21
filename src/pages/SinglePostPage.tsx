@@ -2,11 +2,11 @@ import { useParams, Outlet, useNavigate, NavLink } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Permission } from "@/constants";
 import { usePost } from "@/hooks/useSinglePost";
-import { useNavigator } from "@/services/navigator";
+import { useNav } from "@/services/navigator";
 import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
 
 export const SinglePostPage = () => {
-  const navigator = useNavigator();
+  const nav = useNav();
   const { id: postId } = useParams<{ id: string }>();
   const { user } = useAuth();
   const { data: post, isLoading, isError, error } = usePost(postId);
@@ -86,7 +86,7 @@ export const SinglePostPage = () => {
           <nav className="flex space-x-4 border-t border-gray-200 px-4 sm:px-6 bg-gray-50 rounded-b-lg">
             {hasViewCommentsPermission && (
               <NavLink
-                to={navigator.get("postComments", { id: postId! }) || ""}
+                to={nav.postComments.get({ id: postId! })}
                 className={getNavLinkClass}
               >
                 Comments
@@ -94,7 +94,7 @@ export const SinglePostPage = () => {
             )}
             {hasEditPermission && (
               <NavLink
-                to={navigator.get("editPost", { id: postId! }) || ""}
+                to={nav.editPost.get({ id: postId! })}
                 className={getNavLinkClass}
               >
                 Edit Post

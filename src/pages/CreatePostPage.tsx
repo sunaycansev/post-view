@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCreatePost } from "@/hooks/useCreatePost";
 import { toast } from "sonner";
-import { useNavigator } from "@/services/navigator";
+import { useNav } from "@/services/navigator";
 
 export const CreatePostPage = () => {
   const navigate = useNavigate();
-  const navigator = useNavigator();
+  const navigator = useNav();
   const { user } = useAuth();
   const { mutateAsync: createPost, isPending: isCreating } = useCreatePost();
   const [title, setTitle] = useState("");
@@ -47,7 +47,7 @@ export const CreatePostPage = () => {
         content,
         authorId: user.id,
       });
-      navigate(navigator.get("posts"));
+      navigate(navigator.posts.get());
     } catch (error) {
       console.error("Submission error:", error);
     }
@@ -104,7 +104,7 @@ export const CreatePostPage = () => {
           </button>
           <button
             type="button"
-            onClick={() => navigate(navigator.get("posts"))}
+            onClick={() => navigate(navigator.posts.get())}
             disabled={isCreating}
             className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-60"
           >
