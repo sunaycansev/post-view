@@ -5,18 +5,13 @@
       "name": "John Doe",
       "email": "john@doe.com",
       "password": "password",
-      "permissions": [
-        "VIEW_POSTS",
-        "CREATE_POST",
-        "EDIT_POST",
-        "VIEW_COMMENTS"
-      ]
+      "permissions": ["VIEW_POSTS", "CREATE_POST", "EDIT_POST", "VIEW_COMMENTS"]
     }
   ],
   "posts": [
     {
       "id": "1",
-      "title": "Post 1",
+      "title": "Post 1 213",
       "content": "This is the content of post 1sdsadsa",
       "authorId": 1
     },

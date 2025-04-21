@@ -3,9 +3,30 @@ import { Post } from "@/types/post";
 
 interface UsePostsOptions {
   userId?: number;
+  limit?: number;
+  sortBy?: string;
+  order?: "asc" | "desc";
 }
 
-export const usePosts = ({ userId }: UsePostsOptions) => {
+export const usePosts = ({
+  userId,
+  limit,
+  sortBy,
+  order,
+}: UsePostsOptions = {}) => {
+  const queryParams = new URLSearchParams();
+  if (userId) queryParams.append("authorId", String(userId));
+  if (limit) queryParams.append("_limit", String(limit));
+  if (sortBy) queryParams.append("_sort", sortBy);
+  if (order) queryParams.append("_order", order);
+
+  const queryString = queryParams.toString();
+  const url = `${import.meta.env.VITE_API_URL}/posts${
+    queryString ? `?${queryString}` : ""
+  }`;
+
+  const queryKey = ["posts", { userId, limit, sortBy, order }];
+
   const {
     data: posts,
     isLoading,
@@ -13,14 +34,12 @@ export const usePosts = ({ userId }: UsePostsOptions) => {
     error,
     refetch,
   } = useQuery<Post[]>({
-    queryKey: ["posts", { userId }],
+    queryKey,
     queryFn: async () => {
-      const url = `${import.meta.env.VITE_API_URL}/posts?authorId=${userId}`;
-
       const response = await fetch(url);
 
       if (!response.ok) {
-        throw new Error("Failed to fetch posts");
+        throw new Error(`Failed to fetch posts: ${response.statusText}`);
       }
       return response.json();
     },
