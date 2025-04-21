@@ -6,6 +6,7 @@ import { toast } from "sonner";
 export const EditPostTab = () => {
   const { id: postId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const {
     data: post,
     isLoading: isLoadingPost,

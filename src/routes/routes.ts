@@ -7,6 +7,7 @@ import { Posts } from "@/pages/Posts";
 import { SinglePostPage } from "@/pages/SinglePostPage";
 import { EditPostTab } from "@/pages/EditPostTab";
 import { PostCommentsTab } from "@/pages/PostCommentsTab";
+import { CreatePostPage } from "@/pages/CreatePostPage";
 
 export interface Route {
   name: string;
@@ -65,6 +66,14 @@ export const routes: Route[] = [
     isPrivate: true,
     permissions: [Permission.VIEW_COMMENTS],
     translations: ["postComments"],
+  },
+  {
+    name: "createPost",
+    path: "/posts/create",
+    renderer: CreatePostPage,
+    isPrivate: true,
+    permissions: [Permission.CREATE_POST],
+    translations: ["postCreate"],
   },
   {
     name: "accessDenied",

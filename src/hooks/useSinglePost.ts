@@ -13,7 +13,7 @@ export const usePost = (postId: string | number | undefined) => {
       if (!postId) throw new Error("PostId is required");
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/posts?postId=${postId}`
+        `${import.meta.env.VITE_API_URL}/posts?id=${postId}`
       );
 
       if (!response.ok) {

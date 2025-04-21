@@ -6,12 +6,12 @@ import { hasRequiredPermission } from "@/utils/permissionUtils";
 type RouteParams = Record<string, string | number>;
 
 export const navigator = {
-  get: (routeName: string, params?: RouteParams): string | null => {
+  get: (routeName: string, params?: RouteParams): string => {
     const route = routes.find((route) => route.name === routeName);
 
     if (!route) {
       console.error(`Route with name "${routeName}" not found`);
-      return null;
+      return "";
     }
 
     const initialPath = route.path;
@@ -41,7 +41,7 @@ export const navigator = {
           ", "
         )}) that were not provided or fully replaced. Generated path: ${finalPath}`
       );
-      return null;
+      return "";
     }
 
     return finalPath;
