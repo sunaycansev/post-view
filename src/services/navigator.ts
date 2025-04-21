@@ -58,7 +58,9 @@ export const useNavigator = () => {
 
       if (!route) {
         console.error(
-          `Attempted to navigate to non-existent route: "${routeName}"`
+          `Attempted to navigate to non-existent route: "${routeName}", "params": ${JSON.stringify(
+            params
+          )}`
         );
         return false;
       }

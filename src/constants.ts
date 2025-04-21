@@ -16,5 +16,10 @@ export const AUTH_QUERY_KEY = ["user", "me"];
 export const DUMMY_USER: User = {
   id: 1,
   name: "John Doe",
-  permissions: [Permission.VIEW_POSTS, Permission.VIEW_COMMENTS],
+  permissions: [
+    Permission.VIEW_POSTS,
+    Permission.VIEW_COMMENTS,
+    Permission.EDIT_POST,
+    Permission.CREATE_POST,
+  ],
 };

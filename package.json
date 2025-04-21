@@ -20,6 +20,7 @@
     "@tanstack/react-query-devtools": "^5.74.4",
     "@tanstack/react-query-persist-client": "^5.74.4",
     "husky": "^9.1.7",
+    "json-server": "^1.0.0-beta.3",
     "lint-staged": "^15.5.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.503.0",
