@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Permission } from "@/constants";
 import { Post } from "@/types/post";
 import { Link } from "react-router-dom";
+import { Spinner } from "@/components/Spinner";
 
 export const Posts = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ export const Posts = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg font-medium">Loading posts...</div>
+        <Spinner />
       </div>
     );
   }

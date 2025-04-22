@@ -14,16 +14,6 @@ export const CreatePostPage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
-  };
-
-  const handleContentChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setContent(event.target.value);
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -69,7 +59,7 @@ export const CreatePostPage = () => {
             type="text"
             id="post-title"
             value={title}
-            onChange={handleTitleChange}
+            onChange={(e) => setTitle(e.target.value)}
             disabled={isCreating}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
             required
@@ -87,7 +77,7 @@ export const CreatePostPage = () => {
             id="post-content"
             rows={8}
             value={content}
-            onChange={handleContentChange}
+            onChange={(e) => setContent(e.target.value)}
             disabled={isCreating}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
             required
