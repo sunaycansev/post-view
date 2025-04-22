@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useComments } from "@/hooks/useComments";
 import { CommentDisplay } from "@/components/CommentDisplay";
+import { IconArrowLeft } from "@/assets/IconArrowLeft";
 
 export const PostCommentsTab = () => {
   const { id: postId } = useParams<{ id: string }>();
@@ -37,15 +38,17 @@ export const PostCommentsTab = () => {
 
   return (
     <div className="mt-6 p-4 space-y-4">
-      <div className="flex justify-between items-center mb-4 border-b pb-2">
+      <button
+        type="button"
+        onClick={() => navigate(`/posts`)}
+        className="mb-6 inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:cursor-pointer"
+      >
+        <IconArrowLeft className="h-5 w-5 mr-2 text-gray-400 group-hover:text-gray-600 transition-colors duration-150" />
+        Back to Posts
+      </button>
+
+      <div className="mb-4 border-b pb-2">
         <h2 className="text-2xl font-semibold">Comments</h2>
-        <button
-          type="button"
-          onClick={() => navigate(`/posts`)}
-          className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:cursor-pointer"
-        >
-          Back to Posts
-        </button>
       </div>
       {comments.map((comment) => (
         <CommentDisplay key={comment.id} comment={comment} />
