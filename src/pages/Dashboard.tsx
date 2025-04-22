@@ -88,7 +88,7 @@ export const Dashboard = () => {
                       key={comment.id}
                       className="text-sm text-gray-600 border-b border-gray-100 last:border-b-0 py-1.5"
                     >
-                      {comment.content}
+                      {comment.body}
                     </li>
                   ))
                 ) : (

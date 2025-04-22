@@ -12,7 +12,7 @@ export const CreatePostPage = () => {
   const { user } = useAuth();
   const { mutateAsync: createPost, isPending: isCreating } = useCreatePost();
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [body, setBody] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -27,20 +27,20 @@ export const CreatePostPage = () => {
       return;
     }
 
-    if (!content.trim()) {
-      showToast("Post content cannot be empty.", "error");
+    if (!body.trim()) {
+      showToast("Post body cannot be empty.", "error");
       return;
     }
 
     try {
       await createPost({
         title,
-        content,
-        authorId: user.id,
+        body,
+        userId: user.id,
       });
       navigate(navigator.posts.get());
     } catch (error) {
-      console.error("Submission error:", error);
+      console.error("Submission error in component:", error);
     }
   };
 
@@ -61,25 +61,25 @@ export const CreatePostPage = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isCreating}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm outline-none sm:text-sm disabled:bg-gray-100"
             required
             aria-required="true"
           />
         </div>
         <div>
           <label
-            htmlFor="post-content"
+            htmlFor="post-body"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Content
+            Body
           </label>
           <textarea
-            id="post-content"
+            id="post-body"
             rows={8}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
             disabled={isCreating}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm outline-none sm:text-sm disabled:bg-gray-100"
             required
             aria-required="true"
           />
@@ -88,8 +88,8 @@ export const CreatePostPage = () => {
         <div className="flex items-center gap-4">
           <button
             type="submit"
-            disabled={isCreating || !title.trim() || !content.trim()}
-            className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isCreating || !title.trim() || !body.trim()}
+            className="inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isCreating ? "Creating..." : "Create Post"}
           </button>
