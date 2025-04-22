@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { usePost, useUpdatePost } from "@/hooks/useSinglePost";
 import { useToast } from "@/contexts/ToastContext";
+import { IconArrowLeft } from "@/assets/IconArrowLeft";
+import { useNav } from "@/services/navigator";
 
 export const EditPostTab = () => {
   const { id: postId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const navigator = useNav();
   const { showToast } = useToast();
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   const {
     data: post,
@@ -20,29 +25,37 @@ export const EditPostTab = () => {
     isPending: isUpdating,
     isError: isErrorUpdate,
     error: errorUpdate,
-    isSuccess: isSuccessUpdate,
   } = useUpdatePost(postId);
-
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
 
   useEffect(() => {
     if (post) {
-      setTitle(post[0].title);
-      setContent(post[0].content);
+      setTitle(post.title);
+      setBody(post.body);
     }
   }, [post]);
+
+  const hasChanges =
+    post &&
+    (title.trim() !== post.title.trim() || body.trim() !== post.body.trim());
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!title.trim() || !content.trim()) {
-      showToast("Title and content cannot be empty.", "error");
+    if (!title.trim() || !body.trim()) {
+      showToast("Title and body cannot be empty.", "error");
       return;
     }
 
-    await updatePost({ title, content });
-    showToast("Post updated successfully", "success");
+    if (!hasChanges) {
+      showToast("No changes detected.", "info");
+      return;
+    }
+
+    try {
+      await updatePost({ title, body });
+    } catch (err) {
+      console.error("Update failed in component:", err);
+    }
   };
 
   if (isLoadingPost) {
@@ -73,6 +86,15 @@ export const EditPostTab = () => {
 
   return (
     <div className="mt-6 p-4">
+      <Link
+        to={navigator.singlePost.get({ id: postId })}
+        className="mb-6 inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 hover:cursor-pointer group"
+        aria-label="Go back to posts list"
+      >
+        <IconArrowLeft className="h-5 w-5 mr-2 text-gray-400 group-hover:text-gray-600 transition-colors duration-150" />
+        Back to Post
+      </Link>
+
       <h2 className="text-2xl font-semibold mb-6 border-b pb-2">Edit Post</h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
@@ -88,24 +110,24 @@ export const EditPostTab = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             disabled={isUpdating}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm outline-none sm:text-sm disabled:bg-gray-100"
             required
           />
         </div>
         <div>
           <label
-            htmlFor="post-content"
+            htmlFor="post-body"
             className="block text-sm font-medium text-gray-700"
           >
-            Content
+            Body
           </label>
           <textarea
-            id="post-content"
+            id="post-body"
             rows={6}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
             disabled={isUpdating}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm disabled:bg-gray-100"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm outline-none sm:text-sm disabled:bg-gray-100"
             required
           />
         </div>
@@ -116,16 +138,12 @@ export const EditPostTab = () => {
           </div>
         )}
 
-        {isSuccessUpdate && (
-          <div className="text-green-600 text-sm">
-            Post updated successfully!
-          </div>
-        )}
-
         <div className="flex gap-4">
           <button
             type="submit"
-            disabled={isUpdating || !title || !content}
+            disabled={
+              isUpdating || !title.trim() || !body.trim() || !hasChanges
+            }
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isUpdating ? "Saving..." : "Save Changes"}
@@ -136,13 +154,6 @@ export const EditPostTab = () => {
             className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
           >
             View Comments
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(`/posts`)}
-            className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 hover:cursor-pointer"
-          >
-            Back to Posts
           </button>
         </div>
       </form>

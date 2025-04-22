@@ -100,7 +100,7 @@ const Toast = ({ message, type, onClose }: ToastProps) => {
     info: "bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100",
   };
   const closeButtonClasses =
-    "ml-4 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md shrink-0";
+    "ml-4 p-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-md shrink-0";
 
   return (
     <div

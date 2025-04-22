@@ -8,6 +8,8 @@ interface UsePostsOptions {
   order?: "asc" | "desc";
 }
 
+const POSTS_BASE_URL = `${import.meta.env.VITE_API_URL}/posts`;
+
 export const usePosts = ({
   userId,
   limit,
@@ -15,15 +17,13 @@ export const usePosts = ({
   order,
 }: UsePostsOptions = {}) => {
   const queryParams = new URLSearchParams();
-  if (userId) queryParams.append("authorId", String(userId));
+  if (userId) queryParams.append("userId", String(userId));
   if (limit) queryParams.append("_limit", String(limit));
   if (sortBy) queryParams.append("_sort", sortBy);
   if (order) queryParams.append("_order", order);
 
   const queryString = queryParams.toString();
-  const url = `${import.meta.env.VITE_API_URL}/posts${
-    queryString ? `?${queryString}` : ""
-  }`;
+  const url = `${POSTS_BASE_URL}${queryString ? `?${queryString}` : ""}`;
 
   const queryKey = ["posts", { userId, limit, sortBy, order }];
 
@@ -43,7 +43,6 @@ export const usePosts = ({
       }
       return response.json();
     },
-    enabled: !!userId,
   });
 
   return {

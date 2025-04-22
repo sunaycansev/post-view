@@ -3,8 +3,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { Permission } from "@/constants";
 import { usePost } from "@/hooks/useSinglePost";
 import { useNav } from "@/services/navigator";
-import { ArrowLeft, Loader2, AlertTriangle } from "lucide-react";
-
+import { IconArrowLeft } from "@/assets/IconArrowLeft";
+import { IconLoader } from "@/assets/IconLoader";
+import { IconAlertTriangle } from "@/assets/IconAlertTriangle";
 export const SinglePostPage = () => {
   const nav = useNav();
   const { id: postId } = useParams<{ id: string }>();
@@ -28,7 +29,7 @@ export const SinglePostPage = () => {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
         <div className="flex items-center space-x-2 text-gray-500">
-          <Loader2 className="animate-spin h-5 w-5 text-blue-500" />
+          <IconLoader className="animate-spin h-5 w-5 text-blue-500" />
           <span>Loading post...</span>
         </div>
       </div>
@@ -39,7 +40,7 @@ export const SinglePostPage = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-100px)] px-4">
         <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center shadow-sm">
-          <AlertTriangle
+          <IconAlertTriangle
             className="mx-auto h-12 w-12 text-red-400"
             aria-hidden="true"
           />
@@ -53,7 +54,7 @@ export const SinglePostPage = () => {
           </p>
           <button
             onClick={() => navigate("/posts")}
-            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="mt-4 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
           >
             Go Back to Posts
           </button>
@@ -66,20 +67,20 @@ export const SinglePostPage = () => {
     <div className="container mx-auto px-4 py-8">
       <button
         onClick={() => navigate("/posts")}
-        className="mb-6 inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 group"
+        className="mb-6 inline-flex items-center text-sm font-medium text-gray-600 hover:text-gray-900  hover:cursor-pointer"
       >
-        <ArrowLeft className="h-5 w-5 mr-2 text-gray-400 group-hover:text-gray-600 transition-colors duration-150" />
+        <IconArrowLeft className="h-5 w-5 mr-2 text-gray-400 group-hover:text-gray-600 transition-colors duration-150" />
         Back to Posts
       </button>
 
       <div className="bg-white shadow overflow-hidden rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <h1 className="text-2xl leading-6 font-bold text-gray-900 sm:text-3xl">
-            {post[0].title}
+            {post.title}
           </h1>
         </div>
         <div className="border-t border-gray-200 px-4 py-5 sm:p-6">
-          <p className="text-gray-700 leading-relaxed">{post[0].content}</p>
+          <p className="text-gray-700 leading-relaxed">{post.body}</p>
         </div>
 
         {(hasViewCommentsPermission || hasEditPermission) && (

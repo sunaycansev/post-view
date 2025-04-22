@@ -5,13 +5,22 @@ import { Permission } from "@/constants";
 import { Post } from "@/types/post";
 import { Link } from "react-router-dom";
 import { Spinner } from "@/components/Spinner";
+import { useDeletePost } from "@/hooks/useDeletePost";
+import { IconTrash } from "@/assets/IconTrash";
 
 export const Posts = () => {
   const { user } = useAuth();
   const { posts, isLoading, isError, error } = usePosts({ userId: user?.id });
   const nav = useNav();
+  const { mutate: deletePost, isPending: isDeletingPost } = useDeletePost();
 
   const hasEditPermission = user?.permissions.includes(Permission.EDIT_POST);
+
+  const handleDelete = (postId: number) => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      deletePost(postId);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -48,22 +57,33 @@ export const Posts = () => {
         {posts.map((post: Post) => (
           <div key={post.id} className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-            <p className="text-gray-700 mb-4">{post.content}</p>
-            <div className="flex gap-2">
+            <p className="text-gray-700 mb-4">{post.body}</p>
+            <div className="flex gap-2 items-center">
               <Link
                 to={nav.singlePost.get({ id: post.id })}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:cursor-pointer"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 hover:cursor-pointer text-sm"
               >
                 View Post
               </Link>
 
               {hasEditPermission && (
-                <Link
-                  to={nav.editPost.get({ id: post.id })}
-                  className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 hover:cursor-pointer"
-                >
-                  Edit
-                </Link>
+                <>
+                  <Link
+                    to={nav.editPost.get({ id: post.id })}
+                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 hover:cursor-pointer text-sm"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                    disabled={isDeletingPost}
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm inline-flex items-center gap-1"
+                    aria-label={`Delete post titled ${post.title}`}
+                  >
+                    <IconTrash width={16} height={16} />
+                    Delete
+                  </button>
+                </>
               )}
             </div>
           </div>
