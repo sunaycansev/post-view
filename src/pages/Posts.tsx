@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNav } from "@/services/navigator";
 import { usePosts } from "@/hooks/usePosts";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Spinner } from "@/components/Spinner";
 import { useDeletePost } from "@/hooks/useDeletePost";
 import { IconTrash } from "@/assets/IconTrash";
+import { ConfirmModal } from "@/components/ConfirmModal";
 
 export const Posts = () => {
   const { user } = useAuth();
@@ -14,12 +16,25 @@ export const Posts = () => {
   const nav = useNav();
   const { mutate: deletePost, isPending: isDeletingPost } = useDeletePost();
 
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState<number | null>(null);
+
   const hasEditPermission = user?.permissions.includes(Permission.EDIT_POST);
 
-  const handleDelete = (postId: number) => {
-    if (window.confirm("Are you sure you want to delete this post?")) {
-      deletePost(postId);
+  const handleOpenDeleteConfirm = (postId: number) => {
+    setPostIdToDelete(postId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (postIdToDelete !== null) {
+      deletePost(postIdToDelete);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setPostIdToDelete(null);
+    setIsConfirmModalOpen(false);
   };
 
   if (isLoading) {
@@ -75,7 +90,7 @@ export const Posts = () => {
                     Edit
                   </Link>
                   <button
-                    onClick={() => handleDelete(post.id)}
+                    onClick={() => handleOpenDeleteConfirm(post.id)}
                     disabled={isDeletingPost}
                     className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm inline-flex items-center gap-1"
                     aria-label={`Delete post titled ${post.title}`}
@@ -89,6 +104,16 @@ export const Posts = () => {
           </div>
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Confirm Deletion"
+        message="Are you sure you want to delete this post? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 };
