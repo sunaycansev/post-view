@@ -8,6 +8,7 @@ import { SinglePostPage } from "@/pages/SinglePostPage";
 import { EditPostTab } from "@/pages/EditPostTab";
 import { PostCommentsTab } from "@/pages/PostCommentsTab";
 import { CreatePostPage } from "@/pages/CreatePostPage";
+import { NotFound } from "@/pages/NotFound";
 
 export interface Route {
   name: string;
@@ -81,6 +82,13 @@ export const routes: Route[] = [
     renderer: AccessDenied,
     isPrivate: false,
     translations: ["accessDenied"],
+  },
+  {
+    name: "notFound",
+    path: "*",
+    renderer: NotFound,
+    isPrivate: false,
+    translations: ["notFound"],
   },
 ];
 
