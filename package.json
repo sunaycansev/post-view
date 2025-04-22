@@ -11,7 +11,8 @@
     "type-check": "tsc --noEmit",
     "prepare": "husky",
     "prettier": "prettier --check \"src/**/*.{js,jsx,ts,tsx,scss,css,json}\"",
-    "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss,css,json}\""
+    "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss,css,json}\"",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",

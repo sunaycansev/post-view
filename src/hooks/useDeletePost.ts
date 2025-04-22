@@ -22,7 +22,7 @@ export const useDeletePost = () => {
 
       if (!response.ok) {
         const errorBody = await response.text().catch(() => "");
-        console.error("Failed to delete post:", response.status, errorBody);
+
         throw new Error(
           `Failed to delete post: ${response.status} ${
             errorBody || response.statusText
@@ -39,7 +39,6 @@ export const useDeletePost = () => {
       showToast("Post deleted successfully!", "success");
     },
     onError: (error) => {
-      console.error("Error deleting post:", error);
       showToast(`Error deleting post: ${error.message}`, "error");
     },
   });

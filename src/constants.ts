@@ -19,7 +19,6 @@ export const DUMMY_USER: User = {
   permissions: [
     Permission.VIEW_POSTS,
     Permission.VIEW_COMMENTS,
-    Permission.EDIT_POST,
     Permission.CREATE_POST,
   ],
 };
