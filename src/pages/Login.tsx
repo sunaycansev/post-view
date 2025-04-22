@@ -1,23 +1,23 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { AUTH_QUERY_KEY, DUMMY_USER } from "../constants";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const { showToast } = useToast();
   const from = location.state?.from?.pathname || "/";
 
   const handleLogin = () => {
     try {
       queryClient.setQueryData(AUTH_QUERY_KEY, DUMMY_USER);
-      toast.success("Logged in successfully");
+      showToast("Logged in successfully", "success");
       navigate(from, { replace: true });
     } catch (error) {
       console.error("Failed to log in", error);
-      toast.error("Failed to log in");
+      showToast("Failed to log in", "error");
     }
   };
 

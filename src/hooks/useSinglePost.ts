@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Post } from "@/types/post";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 
 const POST_QUERY_KEY = "post";
 
@@ -30,7 +30,7 @@ export const usePost = (postId: string | number | undefined) => {
 export const useUpdatePost = (postId: string | number | undefined) => {
   const queryClient = useQueryClient();
   const stringPostId = String(postId);
-
+  const { showToast } = useToast();
   return useMutation<Post, Error, Pick<Post, "title" | "content">>({
     mutationFn: async (updatedData) => {
       if (!postId) throw new Error("PostId is required for update");
@@ -62,7 +62,7 @@ export const useUpdatePost = (postId: string | number | undefined) => {
     },
     onError: (error) => {
       console.error("Error updating post:", error);
-      toast.error("Error updating post");
+      showToast("Error updating post", "error");
     },
   });
 };

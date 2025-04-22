@@ -7,7 +7,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Toaster } from "sonner";
+import { ToastProvider } from "@/contexts/ToastContext";
 import { AUTH_QUERY_KEY } from "./constants";
 import { Navbar } from "./components/Navbar";
 
@@ -40,29 +40,30 @@ function App() {
       }}
     >
       <BrowserRouter>
-        <Navbar />
-        <div className="pt-24">
-          <Routes>
-            {routes.map((route) => (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={
-                  <AuthWrapper
-                    isPrivate={route.isPrivate}
-                    permissions={route.permissions}
-                  >
-                    <PrefetchWrapper translationKeys={route.translations}>
-                      <route.renderer />
-                    </PrefetchWrapper>
-                  </AuthWrapper>
-                }
-              />
-            ))}
-          </Routes>
-        </div>
+        <ToastProvider>
+          <Navbar />
+          <div className="pt-24">
+            <Routes>
+              {routes.map((route) => (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={
+                    <AuthWrapper
+                      isPrivate={route.isPrivate}
+                      permissions={route.permissions}
+                    >
+                      <PrefetchWrapper translationKeys={route.translations}>
+                        <route.renderer />
+                      </PrefetchWrapper>
+                    </AuthWrapper>
+                  }
+                />
+              ))}
+            </Routes>
+          </div>
+        </ToastProvider>
         <ReactQueryDevtools initialIsOpen={false} />
-        <Toaster richColors position="top-right" />
       </BrowserRouter>
     </PersistQueryClientProvider>
   );

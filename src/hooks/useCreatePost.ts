@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { Post } from "@/types/post";
 import { User } from "@/constants";
 
@@ -11,7 +11,7 @@ interface CreatePostPayload {
 
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
-
+  const { showToast } = useToast();
   return useMutation<Post, Error, CreatePostPayload>({
     mutationFn: async (newPostData) => {
       const url = `${import.meta.env.VITE_API_URL}/posts`;
@@ -38,11 +38,11 @@ export const useCreatePost = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-      toast.success(`Post "${data.title}" created successfully!`);
+      showToast(`Post "${data.title}" created successfully!`, "success");
     },
     onError: (error) => {
       console.error("Error creating post:", error);
-      toast.error(`Error creating post: ${error.message}`);
+      showToast(`Error creating post: ${error.message}`, "error");
     },
   });
 };

@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useCreatePost } from "@/hooks/useCreatePost";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 import { useNav } from "@/services/navigator";
 
 export const CreatePostPage = () => {
   const navigate = useNavigate();
   const navigator = useNav();
+  const { showToast } = useToast();
   const { user } = useAuth();
   const { mutateAsync: createPost, isPending: isCreating } = useCreatePost();
   const [title, setTitle] = useState("");
@@ -27,17 +28,17 @@ export const CreatePostPage = () => {
     event.preventDefault();
 
     if (!user) {
-      toast.error("You must be logged in to create a post.");
+      showToast("You must be logged in to create a post.", "error");
       return;
     }
 
     if (!title.trim()) {
-      toast.warning("Post title cannot be empty.");
+      showToast("Post title cannot be empty.", "error");
       return;
     }
 
     if (!content.trim()) {
-      toast.warning("Post content cannot be empty.");
+      showToast("Post content cannot be empty.", "error");
       return;
     }
 

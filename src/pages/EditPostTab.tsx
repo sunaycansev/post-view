@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePost, useUpdatePost } from "@/hooks/useSinglePost";
-import { toast } from "sonner";
+import { useToast } from "@/contexts/ToastContext";
 
 export const EditPostTab = () => {
   const { id: postId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const {
     data: post,
@@ -36,12 +37,12 @@ export const EditPostTab = () => {
     event.preventDefault();
 
     if (!title.trim() || !content.trim()) {
-      alert("Title and content cannot be empty.");
+      showToast("Title and content cannot be empty.", "error");
       return;
     }
 
     await updatePost({ title, content });
-    toast.success("Post updated successfully");
+    showToast("Post updated successfully", "success");
   };
 
   if (isLoadingPost) {
